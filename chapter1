@@ -34,3 +34,23 @@
 	      ((and (<= b a) (<= b c)) (sum_of_squares a c))
 	      (else (sum_of_squares a b))))
 (procedure1_3 3 2 1)
+
+;1.4
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+(a-plus-abs-b 3 4)
+(a-plus-abs-b 3 -4)
+(a-plus-abs-b 3 -4.55)
+
+;1.5
+(define (p) (p))
+(define (test x y)
+  (if (= x 0) 0 y))
+(test 0 (p))
+;Infinite runtime here. Why? Because to evaluate (test param0 param1), the interpreter
+;first has to evaluate param0 and param1, sequentially. 0 is evaluated to 0, of course;
+;next function (p) is evaluated. Function (p) is defined as a funtion that calls itself,
+;thus this is a recursive function without base case. It never ends.
+
+
+
