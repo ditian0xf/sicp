@@ -49,7 +49,7 @@
 (test 0 (p))
 ;Infinite runtime here. Why? Because to evaluate (test param0 param1), the interpreter
 ;first has to evaluate param0 and param1, sequentially. 0 is evaluated to 0, of course;
-;next function (p) is evaluated. Function (p) is defined as a funtion that calls itself,
+;then function (p) is evaluated. Function (p) is defined as a funtion that calls itself,
 ;thus this is a recursive function without base case. It never ends.
 
 
