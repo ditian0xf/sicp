@@ -88,4 +88,54 @@
 ;-----
 ;1.7
 ;-----
+(define (sqrt x)
+  (sqrt-iter 1.0 x))  ; always guess the square root is 1.0 at the beginning
+(define (sqrt-iter guess x) 
+  (if (good-enough? guess x) guess  ; if the guess is good enough, return the value guess 
+      (sqrt-iter (improve-guess guess x) x)))  ; otherwise, improve the guess and proceed to the next iteration
+(define (good-enough? guess x) 
+  (< (abs (- (* guess guess) x)) 0.001))  ; |guess * guess - x| < 0.001?
+(define (abs x) 
+  (if (> x 0) x (- x)))
+(define (improve-guess guess x)  ; improvement := (guess + x / guess) / 2 
+  (/ (+ guess (/ x guess)) 2))
+
+(define (good-enough0? guess x) 
+  (< (abs (- (improve-guess guess x) guess)) (* 0.001 guess)))
+
+(sqrt 999999999999999999999999999)
+;For very small number,
+;the old "good-enough?" function converges too fast, resulting in inaccuracy: (sqrt 0.00000005) = 0.031250532810688444;
+;while the new version is more accurate: (sqrt 0.00000005) = 0.0002236069910516385.
+;For very big number,
+;the old version is more accurate, although it takes more iterations to achieve this: (sqrt 999999999999999999999999999) = 31631394972364.664;  
+;the new version: (sqrt 999999999999999999999999999) = 31622776601683.793.
+
+;-----
+;1.8
+;-----
+(define (cubic-root x)
+  (cond ((> x 0) (cubic-root-iter 1.0 x)) 
+        ((< x 0) (- (cubic-root-iter 1.0 (- x))))
+        (else 0)))  ; always guess the cubic root is 1.0 at the beginning
+(define (cubic-root-iter guess x) 
+  (if (good-enough? guess x) guess  ; if the guess is good enough, return the value guess 
+      (cubic-root-iter (improve-guess guess x) x)))  ; otherwise, improve the guess and proceed to the next iteration
+(define (abs x) 
+  (if (> x 0) x (- x)))
+(define (improve-guess guess x)  ; improvement := (x / guess^2 + 2 * guess) / 3 
+  (/ (+ (* 2 guess) (/ x (* guess guess))) 3))
+(define (good-enough? guess x) 
+  (< (abs (- (improve-guess guess x) guess)) (* 0.000001 guess)))
+
+(cubic-root 1)
+(cubic-root -1)
+(cubic-root 64)
+(cubic-root -64)
+(cubic-root -0.008)
+(cubic-root 0)
+;When x = 0, improved_guess = 2/3 * guess, that is, guess(i+1) = 2/3 * guess(i). Therefore |improved_guess - guess| = 1/3 * guess, 
+;and is always greater than 0.000001 * guess, resulting in infinite interation here. x = 0 should be specifically taken care of.
+
+
 
