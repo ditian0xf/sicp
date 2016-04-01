@@ -141,27 +141,74 @@
 ;1.9
 ;-----
 (+ 4 5)
-= (+ 3 5) + 1
-= (+ 2 5) + 1 + 1
-= (+ 1 5) + 1 + 1 + 1
-= (+ 0 5) + 1 + 1 + 1 + 1
-= 5 + 1 + 1 + 1 + 1
-= 6 + 1 + 1 + 1
-= 7 + 1 + 1
-= 8 + 1
-= 9
+--> (+ 3 5) + 1
+--> (+ 2 5) + 1 + 1
+--> (+ 1 5) + 1 + 1 + 1
+--> (+ 0 5) + 1 + 1 + 1 + 1
+--> 5 + 1 + 1 + 1 + 1
+--> 6 + 1 + 1 + 1
+--> 7 + 1 + 1
+--> 8 + 1
+--> 9
 ; There are deferred evaluations, which are "inc (+ 3 5)", "inc (+ 2 5)", "inc (+ 1 5)" and "inc (+ 0 5)", therefore this process is recursive.
 ; Expansion then contraction; a chain of deferred operations.
 
 (+ 4 5)
-= (+ 3 6)
-= (+ 2 7)
-= (+ 1 8)
-= (+ 0 9)
-= 9
+--> (+ 3 6)
+--> (+ 2 7)
+--> (+ 1 8)
+--> (+ 0 9)
+--> 9
 ; No expansion then contraction. All we need to keep track of are the current values of the variables a and b.
 ; The state of the process can be summarized by a fixed number of state variables, together with the updating rule.
 
 ;-----
 ;1.10
+;-----
+(A 1 10)
+--> (A 0 (A 1 9))
+--> (A 0 (A 0 (A 1 8)))
+--> ...
+--> {9 "(A 0"s} (A 1 1)
+--> {9 "(A 0"s} 2
+--> {8 "(A 0"s} 2^2
+--> ...
+--> 2^10
+--> 1024
+
+(A 2 4)
+--> (A 1 (A 2 3))
+--> (A 1 (A 1 (A 2 2)))
+--> (A 1 (A 1 (A 1 (A 2 1))))
+--> (A 1 (A 1 (A 1 2)))
+--> (A 1 (A 1 (A 0 (A 1 1))))
+--> (A 1 (A 1 (A 0 2)))
+--> (A 1 (A 1 4))
+--> (A 1 (A 0 (A 1 3)))
+--> (A 1 (A 0 (A 0 (A 1 2))))
+--> (A 1 (A 0 (A 0 (A 0 (A 1 1)))))
+--> (A 1 (A 0 (A 0 (A 0 2))))
+--> (A 1 (A 0 (A 0 4)))
+--> (A 1 (A 0 8))
+--> (A 1 16)
+--> 2^16
+--> 65536
+
+(A 3 3)
+--> (A 2 (A 3 2))
+--> (A 2 (A 2 (A 3 1)))
+--> (A 2 (A 2 2))
+--> (A 2 4)
+--> 65536
+
+(define (f n) (A 0 n))  ; 2n
+
+(define (g n) (A 1 n))  ; 2^n
+
+(define (h n) (A 2 n))  ; 2^^n (^^ is Knuth's upper-arrow notation)
+
+(define (k n) (* 5 n n))  ; 5n^2
+
+;-----
+;1.11
 ;-----
