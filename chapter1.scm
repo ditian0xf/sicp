@@ -196,7 +196,7 @@
 
 (define (g n) (A 1 n))  ; 2^n
 
-(define (h n) (A 2 n))  ; 2^^n (^^ is Knuth's upper-arrow notation)
+(define (h n) (A 2 n))  ; 2^^n (^^ is Knuth's up-arrow notation)
 
 (define (k n) (* 5 n n))  ; 5n^2
 
