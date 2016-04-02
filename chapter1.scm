@@ -200,6 +200,47 @@
 
 (define (k n) (* 5 n n))  ; 5n^2
 
+;-------------
+;count change
+;-------------
+(define (count-change amount) (cc amount 5))
+(define (cc amount kinds-of-coins) 
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount (- kinds-of-coins 1))  ; not use current coin for current amount 
+                 (cc (- amount (first-denomination kinds-of-coins)) kinds-of-coins)))))  ; use current coin for current amount
+(define (first-denomination kinds-of-coins) 
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+(count-change 100)
+
 ;-----
 ;1.11
 ;-----
+(define (f n)  ;recursive 
+  (if (< n 3) n (+ (f (- n 1)) (* 2 (f (- n 2))) (* 3 (f (- n 3))))))
+
+(define (f n)  ;iterative 
+  (if (< n 3) n (f-iter 0 1 2 (- n 2))))
+
+(define (f-iter ppp pp p how-many-left) 
+  (if (= how-many-left 0) p (f-iter pp p (+ (* 3 ppp) (* 2 pp) p) (- how-many-left 1))))
+
+(f 20)
+
+;-----
+;1.12
+;-----
+;assume row >= col
+;1
+;1 1
+;1 2 1
+;1 3 3 1
+;...
+(define (pascal-element row col) 
+  (if (or (= col 0) (= row col)) 1 
+      (+ (pascal-element (- row 1) (- col 1)) (pascal-element (- row 1) col))))
