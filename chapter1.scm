@@ -288,3 +288,71 @@
 ;-----
 ;1.16
 ;-----
+; Use idea in hint: a is used to keep track of the product of "extra" (current) bs when n is odd.
+; For example: 3^12
+; n   b     a
+; 12  3     1
+; 6   9     1
+; 3   81    1
+; 2   81    81
+; 1   6561  81
+; 0   6561  81*6561
+(define (expt b n) 
+  (fast-expt-iter b n 1))
+(define (fast-expt-iter b n a) 
+  (if (= n 0) a 
+      (if (even? n) (fast-expt-iter (* b b) (/ n 2) a) (fast-expt-iter b (- n 1) (* a b)))))
+(define (even? n) (= (remainder n 2) 0))
+
+(expt 3 12)
+
+;-----
+;1.17
+;-----
+; Compute a * b. Assume a >= 0 and b >= 0.
+; For example, 3 * 5
+; (3, 5)
+; 3 + (3, 4)
+; 3 + 2 * (3, 2)
+; 3 + 2 * (2 * (3, 1))
+; 3 + 2 * (2 * (3 + (3, 0)))
+; -- evaluations above are deferred --
+; 3 + 2 * (2 * (3 + 0))
+; 3 + 2 * (2 * 3)
+; 3 + 2 * 6
+; 3 + 12
+; 15
+; -- deferred evaluations are actually evaluated above --
+; We can see "expansion then contraction" and deferred evaluations here, thus this is recursive.
+(define (fast-mul a b) 
+  (if (= b 0) 0 
+      (if (even? b) (double (fast-mul a (halve b))) (+ a (fast-mul a (- b 1))))))
+(define (even? n) (= (remainder n 2) 0))
+(define (halve n) (/ n 2))
+(define (double n) (* n 2))
+
+(fast-mul 98 891)
+
+;-----
+;1.18
+;-----
+; Compute a * b, assume a >= 0 and b >= 0.
+; fast-mul iterative version.
+; Use idea in 1.16: c is used to keep track of the sum of "extra" (current) as when b is odd.
+; For example: 3 * 5
+; a    b    c
+; 3    5    0
+; 3    4    3
+; 6    2    3
+; 12   1    3
+; 12   0    15
+(define (fast-mul a b) 
+  (fast-mul-iter a b 0))
+(define (fast-mul-iter a b c) 
+  (if (= b 0) c 
+      (if (even? b) (fast-mul-iter (double a) (halve b) c) (fast-mul-iter a (- b 1) (+ c a)))))
+(define (even? n) (= (remainder n 2) 0))
+(define (halve n) (/ n 2))
+(define (double n) (* n 2))
+
+(fast-mul 0 3)
