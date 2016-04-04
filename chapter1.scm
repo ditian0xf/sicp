@@ -47,10 +47,20 @@
 (define (test x y)
   (if (= x 0) 0 y))
 (test 0 (p))
-;Infinite runtime here. Why? Because to evaluate (test param0 param1), the interpreter
-;first has to evaluate param0 and param1, sequentially. 0 is evaluated to 0, of course;
-;then function (p) is evaluated. Function (p) is defined as a funtion that calls itself,
-;thus this is a recursive function without termination condition. It never ends.
+; Infinite runtime here. Why?
+; --------
+; Scheme is an applicative-order language, namely, that all the arguments to Scheme procedures are evaluated
+; when the procedure is applied. In contrast, normal-order languages delay evaluation of procedure arguments
+; until the actual argument values are needed, which is also called lazy evaluation.
+; --------
+; Therefore, when applying procedure "test", all the arguments of "test", namely 0 and (p) are evaluated.
+; 0 is evaluated to 0 of course.
+; (p) is a procedure that keeps calling itself without termination condition, thus the evaluation never ends.
+;
+; However, if the interpreter uses normal-order/lazy evaluation, when evaluating (test 0 (p)), it will replace
+; the evaluation as (if (= 0 0) 0 (p)), the arguments will not be touched until they are needed. As regards "if"
+; function, the 1st argument (= 0 0) is firstly evaluated as #t, so the 2nd argument 0 is needed, while the 3rd
+; is not. 0 is evaluated as 0. In the end, the procedure "test" is evaluated as 0.
 
 ;computing square root of x
 (define (sqrt x)
@@ -79,11 +89,12 @@
       (sqrt-iter (improve-guess guess x) x)))  ; otherwise, improve the guess and proceed to the next iteration
 
 (sqrt 1)
-;Infinite runtime here. Again, (new-if predicate then-clause else-clause) is a self-defined function. To evaluate
-;this function, firstly the interpreter must evaluate predicate, then-clause, else-clause, sequentially. Here
-;predicate is (good-enough? guess x), then-clause is guess, both easy to evaluate; however, the else-clause is 
-;again a recursive function without termination condition, so it never ends. As a matter of fact, the idea here is
-;that we should only evaluate the predicate to decide what to do next.
+; Infinite runtime here. As regards customer- defined procedure (new-if predicate then-clause else-clause), when applied,
+; the interpreter firstly evaluates all its 3 arguments.
+; predicate is (good-enough? guess x), then-clause is guess, both easy to evaluate; however, the else-clause is 
+; again a recursive function without termination.
+; As a matter of fact, the idea here is that we should only evaluate the predicate to decide what to do next, 
+; so we should use the original "if" procedure.
 
 ;-----
 ;1.7
@@ -389,3 +400,7 @@
 (define (even? n) (= (remainder n 2) 0))
   
 (fib 19)
+
+;-----
+;1.20
+;-----
