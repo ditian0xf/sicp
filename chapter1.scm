@@ -598,3 +598,29 @@ R3  ; curCount = 18.
 ; Althogh (base^exp) mod m is evaluated only once, while (something) mod m is evaluated log(exp) times, 
 ; the latter case is still much faster, because dealing with huge number arithmatic operations is so slow.
 
+;-----
+;1.26
+;-----
+; The new process is THETA(n).
+; The height of the recursion tree is THETA(logn).
+; At each node where exp is even, there are two branches.
+; Therefore the number of nodes in the recursion tree is THETA(n).
+
+;-----
+;1.27
+;-----
+(define (square x) (* x x))
+
+(define (expmod base exp m) 
+  (cond ((= exp 0) 1)
+        ((even? exp) (remainder (square (expmod base (/ exp 2) m)) m))
+        (else (remainder (* base (expmod base (- exp 1) m)) m))))
+
+(define (test-carmichael-number n) (if (< n 2) #f (test-iter (- n 1) n)))
+
+(define (test-iter i n) 
+  (cond ((= i 1) #t)
+        ((= i (expmod i n n)) (test-iter (- i 1) n))
+        (else #f))) 
+
+(test-carmichael-number 6601)
