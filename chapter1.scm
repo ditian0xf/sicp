@@ -119,7 +119,8 @@
 ;the old "good-enough?" function converges too fast, resulting in inaccuracy: (sqrt 0.00000005) = 0.031250532810688444;
 ;while the new version is more accurate: (sqrt 0.00000005) = 0.0002236069910516385.
 ;For very big number,
-;the old version is more accurate, although it takes more iterations to achieve this: (sqrt 999999999999999999999999999) = 31631394972364.664;  
+;the old version is more accurate, although it takes more iterations to achieve this: (sqrt 999999999999999999999999999) 
+;= 31631394972364.664;  
 ;the new version: (sqrt 999999999999999999999999999) = 31622776601683.793.
 
 ;-----
@@ -145,8 +146,10 @@
 (cubic-root -64)
 (cubic-root -0.008)
 (cubic-root 0)
-;When x = 0, improved_guess = 2/3 * guess, that is, guess(i+1) = 2/3 * guess(i). Therefore |improved_guess - guess| = 1/3 * guess, 
-;and is always greater than 0.000001 * guess, resulting in infinite interation here. x = 0 should be specifically taken care of.
+;When x = 0, improved_guess = 2/3 * guess, that is, guess(i+1) = 2/3 * guess(i). Therefore |improved_guess - guess| 
+;= 1/3 * guess, 
+;and is always greater than 0.000001 * guess, resulting in infinite interation here. x = 0 should be specifically 
+;taken care of.
 
 ;-----
 ;1.9
@@ -161,7 +164,8 @@
 --> 7 + 1 + 1
 --> 8 + 1
 --> 9
-; There are deferred evaluations, which are "inc (+ 3 5)", "inc (+ 2 5)", "inc (+ 1 5)" and "inc (+ 0 5)", therefore this process is recursive.
+; There are deferred evaluations, which are "inc (+ 3 5)", "inc (+ 2 5)", "inc (+ 1 5)" and "inc (+ 0 5)", therefore 
+; this process is recursive.
 ; Expansion then contraction; a chain of deferred operations.
 
 (+ 4 5)
@@ -219,7 +223,7 @@
   (cond ((= amount 0) 1)
         ((or (< amount 0) (= kinds-of-coins 0)) 0)
         (else (+ (cc amount (- kinds-of-coins 1))  ; not use current coin for current amount 
-                 (cc (- amount (first-denomination kinds-of-coins)) kinds-of-coins)))))  ; use current coin for current amount
+                 (cc (- amount (first-denomination kinds-of-coins)) kinds-of-coins)))))  ; use
 (define (first-denomination kinds-of-coins) 
   (cond ((= kinds-of-coins 1) 1)
         ((= kinds-of-coins 2) 5)
@@ -542,7 +546,8 @@ R3  ; curCount = 18.
 
 (timed-prime-test 961748927)
 ; 961748927 is a large prime number.
-; For the original (+ 1 test-divisor), try 10 times: 931, 995, 1053, 1014, 968, 941, 1051, 1043, 921, 912, average 982.9.
+; For the original (+ 1 test-divisor), try 10 times: 931, 995, 1053, 1014, 968, 941, 1051, 1043, 921, 912, 
+; average 982.9.
 ; For the (next test-divisor), try 10 times: 911, 932, 946, 962, 1011, 925, 896, 900, 967, 949, average 939.9.
 ; The observed ratio is not 2, but near 1.
 ; The only difference is between (+ 1 test-divisor) and (next test-divisor).
@@ -586,7 +591,8 @@ R3  ; curCount = 18.
 ; Since the time complexity is THETA(logn), the time growth is indeed very slow.
 ; The running time of (timed-prime-test 1000037) is supposed to be 2x as the running time of (timed-prime-test 1019).
 ; However, the actual ratio is 637 / 4119.6 = 1.52.
-; Note that the "expmod" function is not strictly logarithmic, and it is not easy to tell the actual random number distribution.
+; Note that the "expmod" function is not strictly logarithmic, and it is not easy to tell the actual random number
+; distribution.
 ; These two reasons could lead to the discrepancy between theory and observation.
 
 ;-----
@@ -594,7 +600,8 @@ R3  ; curCount = 18.
 ;-----
 ; The result is correct, but the execution time is larger.
 ; For the "fast-expt" method, we are doing (base^exp) mod m, however, evaluating (base^exp) is slow and not necessary.
-; For the "expmod" method, we are doing (something) mod m. It can be easily observed that (something) never exceeds base^2.
+; For the "expmod" method, we are doing (something) mod m. It can be easily observed that (something) never
+; exceeds base^2.
 ; Althogh (base^exp) mod m is evaluated only once, while (something) mod m is evaluated log(exp) times, 
 ; the latter case is still much faster, because dealing with huge number arithmatic operations is so slow.
 
@@ -644,4 +651,32 @@ R3  ; curCount = 18.
 
 ; 6601 is one of the Carmichael numbers; it is composite.
 ; If we (fermat-test 6601), the result is always true, meaning fermat-test considers 6601 as a prime number.
-; If we (miller-rabin-test 6601), the results are mainly false (very, very rare chance that the result is true; while prime numbers always result in true).
+; If we (miller-rabin-test 6601), the results are mainly false (very, very rare chance that the result is true; 
+; while prime numbers always result in true).
+
+;-----
+;1.29
+;-----
+(define (sum term a next b)
+  (if (> a b)
+    0
+    (+ (term a)
+       (sum term (next a) next b))))
+
+(define (cube x) (* x x x))
+
+; Instead of incrementing (a + kh), we increment k.
+(define (integral-simpson f a b n)
+  (define h (/ (- b a) n))  ; h = (b-a)/n
+  (define (y k) (f (+ a (* k h))))  ; yk = f(a + hk)
+  (define (inc k) (+ k 1))
+  (define (term k) (* (y k) (cond ((or (= 0 k) (= n k)) 1)
+                                  ((even? k) 2)
+                                  (else 4))))
+  (/ (* h (sum term 0 inc n)) 3))
+
+(integral-simpson cube 0 1 1000)
+
+;-----
+;1.30
+;-----
