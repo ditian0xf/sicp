@@ -690,4 +690,5 @@ R3  ; curCount = 18.
 ;-----
 ;1.31
 ;-----
-
+(define (product term a next b) 
+  ())
