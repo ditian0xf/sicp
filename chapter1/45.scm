@@ -39,6 +39,23 @@
 	(/ (+ a b) 2))
 
 (define (average-damp f)
-	(lambda (x) (average x (f x)))
+	(lambda (x) (average x (f x))))
 ;----
 
+(define (nth-root-test x n how-many-damp)
+	(fixed-point-of-transform (lambda (y) (/ x (expt y (- n 1)))) (repeated average-damp how-many-damp) 1.0))
+
+;(nth-root 16 1 0)
+
+; Experiment n -- how-many-damp relationship
+; n             | 1 | 2 3 | 4 5 6 7 | 8 ...
+; how-many-damp | 0 | 1 1 | 2 2 2 2 | 3 ...
+
+; how-many-damp = floor(lg(n))
+
+; Redefine nth-root procedure as:
+
+(define (nth-root x n)
+	(fixed-point-of-transform (lambda (y) (/ x (expt y (- n 1)))) (repeated average-damp (floor (/ (log n) (log 2)))) 1.0))
+
+(nth-root 123 57)
