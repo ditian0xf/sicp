@@ -2,8 +2,6 @@
 ;2.1
 ;-----
 
-#lang racket
-
 (define (make-rat n d)
   (let ((abs-n (abs n)) (abs-d (abs d)) (g (gcd (abs n) (abs d))))
     (if (or (and (> n 0) (> d 0)) (and (< n 0) (< d 0)))  ; if (n > 0 && d > 0) || (n < 0 && d < 0) 
