@@ -8,8 +8,9 @@
         (cons (/ abs-n g) (/ abs-d g))
         (cons (- (/ abs-n g)) (/ abs-d g)))))
 
-(make-rat 12 18)
-(make-rat -12 -18)
-(make-rat -12 18)
-(make-rat 12 -18)
+; test
+; (make-rat 12 18)
+; (make-rat -12 -18)
+; (make-rat -12 18)
+; (make-rat 12 -18)
 
