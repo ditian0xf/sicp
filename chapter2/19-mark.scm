@@ -38,3 +38,7 @@
 ; does the order of the list of coin-values affect the answer produced by cc?
 ; why or why not?
 
+; the order of the list does not affect the answer because
+; all combinations are tried regardless.
+; sorting the list with the higher values fist does produce a "smaller" process becuase
+; it causes the branches to end more quickly.
