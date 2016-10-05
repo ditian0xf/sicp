@@ -39,26 +39,26 @@
         (else (+ (total-weight (branch-structure (left-branch mobile)))
                  (total-weight (branch-structure (right-branch mobile)))))))
 
-> m
-((2 (6 . 100) 8 (5 (7 . 107) 10 . 93) 4 . 37) 3 . 23)
-> (total-weight m)
-360
-> m7n10
-((7 . 107) 10 . 93)
-> b7
-(7 . 107)
-> b10
-(10 . 93)
-> (define a (cons 7 107))
-> a
-(7 . 107)
-> (define b (cons 10 93))
-> b
-(10 . 93)
-> (cons a b)
-((7 . 107) 10 . 93)
-> (total-weight (cons a b))
-200
-> (total-weight m7n10)
-200
-> 
+; > m
+; ((2 (6 . 100) 8 (5 (7 . 107) 10 . 93) 4 . 37) 3 . 23)
+; > (total-weight m)
+; 360
+; > m7n10
+; ((7 . 107) 10 . 93)
+; > b7
+; (7 . 107)
+; > b10
+; (10 . 93)
+; > (define a (cons 7 107))
+; > a
+; (7 . 107)
+; > (define b (cons 10 93))
+; > b
+; (10 . 93)
+; > (cons a b)
+; ((7 . 107) 10 . 93)
+; > (total-weight (cons a b))
+; 200
+; > (total-weight m7n10)
+; 200
+; > 
