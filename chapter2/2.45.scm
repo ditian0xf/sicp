@@ -18,13 +18,16 @@
         (below painter (beside smaller smaller)))))
 
 (define (split first then)
-  (lambda (painter n)
+  (define (stepped-split painter n)
     (if (= n 0)
         painter
-        (let ((smaller (split painter (- n 1))))
-          (first painter (then smaller smaller))))))
+        (let ((smaller (stepped-split painter (- n 1))))
+          (first painter (then smaller smaller)))))
+  stepped-split)
 
-(define (r-split) (split beside below))
+(define r-split (split beside below))
+
+(define u-split (split below beside))
 
 
 
