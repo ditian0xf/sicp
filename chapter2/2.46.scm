@@ -2,9 +2,6 @@
 ;2.46
 ;-----
 
-#lang racket
-(require (planet "sicp.ss" ("soegaard" "sicp.plt" 2 1)))
-
 (define (make-vect x y)
   (list x y))
 
