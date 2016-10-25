@@ -22,24 +22,24 @@
 (define (scale-vect s v)
   (make-vect (* s (xcor-vect v)) (* s (ycor-vect v))))
 
-;----- actual solution -----
+;----- the solution -----
 (define (make-segment v1 v2)
   (list v1 v2))
 
 (define (start-segment seg)
-  (cadar seg))
+  (car seg))
 
 (define (end-segment seg)
-  (cadadr seg))
+  (cadr seg))
 
 ; tests
 ; > (define s (make-segment (make-vect (list 0 0) (list 5 -3)) (make-vect (list 0 0) (list -5 10))))
 ; > s
 ; (((0 0) (5 -3)) ((0 0) (-5 10)))
 ; > (start-segment s)
-; (5 -3)
+; ((0 0) (5 -3))
 ; > (end-segment s)
-; (-5 10)
+; ((0 0) (-5 10))
 ; >
 
 
