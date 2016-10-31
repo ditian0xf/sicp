@@ -34,6 +34,19 @@
 
 (define (multiplicand p) (caddr p))
 
+(define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
+
+(define (base exp) (cadr exp))
+
+(define (exponent exp) (caddr exp))
+
+(define (make-exponentiation b e)
+  (cond ((=number? e 0) 1)
+        ((=number? b 0) 0)
+        ((=number? e 1) b)
+        ((=number? b 1) 1)
+        (else (list '** b e))))
+
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
@@ -43,6 +56,11 @@
                                                 (deriv (multiplicand exp) var))
                                   (make-product (deriv (multiplier exp) var)
                                                 (multiplicand exp))))
+        ((exponentiation? exp) (let ((b (base exp))
+                                     (e (exponent exp)))
+                                 (make-product (make-product e
+                                                             (make-exponentiation b (make-sum e -1)))
+                                               (deriv b var))))
         (else error "unknow expression type: DERIV" exp)))
 
 ; tests
@@ -56,5 +74,34 @@
 ; (+ (* x y) (* y (+ x 3)))
 ; >
 
+; > (deriv '(** x 5) 'y)
+; 0
+; > (deriv '(** x 5) 'x)
+; (* 5 (** x 4))
+; > (deriv '(** x 1) 'x)
+; 1
+; > (deriv '(** x 2) 'x)
+; (* 2 x)
+; > (deriv '(** x -4) 'x)
+; (* -4 (** x -5))
+; > (deriv '(+ (* 6 (** x 5)) (* 2 x)) 'x)
+; (+ (* 6 (* 5 (** x 4))) 2)
+; > (deriv '(** 0 5) 'x)
+; 0
+; > (deriv '(** 0 x) 'x)
+; 0
+; > (deriv '(** x k) 'x)
+; (* k (** x (+ k -1)))
+; > (deriv '(** u n) 'x)
+; 0
+; > (deriv '(** (* 2 x) n) 'x)
+; (* (* n (** (* 2 x) (+ n -1))) 2)
+; > (deriv '(** x x) 'x)
+; (* x (** x (+ x -1)))  ; OBVIOUSLY WRONG!!!
+; > (deriv '(** (* r (** x p)) n) 'x)
+; (* (* n (** (* r (** x p)) (+ n -1))) (* r (* p (** x (+ p -1)))))
+; > (deriv '(** (+ (* r (** x p)) (* x q)) n) 'x)
+; (* (* n (** (+ (* r (** x p)) (* x q)) (+ n -1))) (+ (* r (* p (** x (+ p -1)))) q))
+; > 
 
 
