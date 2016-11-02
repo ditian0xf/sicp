@@ -26,13 +26,21 @@
 
 (define (addend s) (cadr s))
 
-(define (augend s) (cddr s))
+; ----- 2.57 changes -----
+(define (augend s)
+  (if (null? (cdddr s))  ; (cdddr '(+ 3 4)) is ()
+      (caddr s)
+      (cons '+ (cddr s))))
 
 (define (product? x) (and (pair? x) (eq? (car x) '*)))
 
 (define (multiplier p) (cadr p))
 
-(define (multiplicand p) (cddr p))
+; ----- 2.57 changes -----
+(define (multiplicand p)
+  (if (null? (cdddr p))
+      (caddr p)
+      (cons '* (cddr p))))
 
 (define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
 
@@ -102,6 +110,14 @@
 ; (* (* n (** (* r (** x p)) (+ n -1))) (* r (* p (** x (+ p -1)))))
 ; > (deriv '(** (+ (* r (** x p)) (* x q)) n) 'x)
 ; (* (* n (** (+ (* r (** x p)) (* x q)) (+ n -1))) (+ (* r (* p (** x (+ p -1)))) q))
-; > 
+; >
+
+; > (deriv '(* x y (+ x 3)) 'x)
+; (+ (* x y) (* y (+ x 3)))
+; > (deriv '(+ x y (+ x 3)) 'x)
+; 2
+; >
+
+
 
 
