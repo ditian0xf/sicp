@@ -1,0 +1,47 @@
+;-----
+;2.61
+;-----
+
+; On the average we should expect to have to examine about half of the items in the set.
+(define (adjoin-set x set)
+  (define (find-and-insert x visited rest)
+    (cond ((null? rest) (append visited (list x)))
+          ((= x (car rest)) (append visited rest))
+          ((< x (car rest)) (append visited (cons x rest)))
+          (else (find-and-insert x (append visited (list (car rest))) (cdr rest)))))
+  (find-and-insert x (list) set))
+
+; tests
+; > (adjoin-set 5 (list))
+; (5)
+; > (adjoin-set 5 (list 5))
+; (5)
+; > (adjoin-set 5 (list 4))
+; (4 5)
+; > (adjoin-set 5 (list 7))
+; (5 7)
+; > (adjoin-set 5 (list 1 3))
+; (1 3 5)
+; > (adjoin-set 5 (list 1 7))
+; (1 5 7)
+; > (adjoin-set 5 (list 6 10))
+; (5 6 10)
+; > (adjoin-set 5 (list 5 10))
+; (5 10)
+; > (adjoin-set 5 (list 3 5))
+; (3 5)
+; > (adjoin-set 5 (list 1 3 9))
+; (1 3 5 9)
+; > (adjoin-set 5 (list 1 6 9))
+; (1 5 6 9)
+; > (adjoin-set 5 (list 7 8 9))
+; (5 7 8 9)
+; > (adjoin-set 5 (list 1 2 3))
+; (1 2 3 5)
+; > (adjoin-set 5 (list 5 6 7))
+; (5 6 7)
+; > (adjoin-set 5 (list 4 5 6))
+; (4 5 6)
+; > (adjoin-set 5 (list 3 4 5))
+; (3 4 5)
+; >
