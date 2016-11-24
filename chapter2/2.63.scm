@@ -69,5 +69,34 @@
 ; tree->list-2 produces [1, 3, 5, 7, 9, 11].
 
 ; ----- b -----
+; tree->list-1 takes THETA(nlgn) time.
+; Since there are lgn levels,
+; and for each level, from top to bottom, the count of "append" steps are:
+; n
+; n -  1
+; n - (1 + 2)
+; n - (1 + 2 + 4)
+; ...
+; n - (1 + 2 + 4 + ... + (n/2 + 1))
+
+; The sum is
+; n(lgn + 1) - 1 - (1 + 2) - (1 + 2 + 4) - ... - (1 + 2 + 4 + ... + (n/2 + 1)) :=
+; n(lgn + 1) - T :=
+; S
+
+; T = lgn + 2(lgn - 1) + 4(lgn - 2) + ... + (n/2 + 1)(lgn - (lgn - 1))
+;   = lgn(1 + 2 + 4 + ... + (n/2 + 1)) - (1*2 + 2*4 + ... + (lgn - 1) * (n/2 + 1))
+;   = nlgn - (1*2 + 2*4 + ... + (lgn - 1) * (n/2 + 1))
+; S = n(lgn + 1) - T = n + (1*2 + 2*4 + ... + (lgn - 1) * (n/2 + 1)) = n + sum_(1)_(lgn-1)_(i*2^i)
+; By http://www.wolframalpha.com/input/?i=sum(i*2%5Ei),
+; S = n + 2((lgn-1) * 2^(lgn-1) - 2^(lgn-1) + 1) = n + (n(lgn-1) - n + 2) = nlgn - n + 2
+
+; which is THETA(nlgn).
+
+; tree->list-2 takes THETA(n) time.
+; This is because it iterates through the tree nodes, which is THETA(n);
+; and for each tree node, it just prepends it to the beginning of the result list, which is THETA(1).
+
+
 
 
