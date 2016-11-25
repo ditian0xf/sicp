@@ -22,3 +22,20 @@
                                left-tree
                                right-tree)
                     remaining-elts)))))))
+
+; ----- a -----
+; partial-tree builds a binary search tree from the first n elements in an ordered list.
+; It takes the middle element of the first n elements as the root,
+; and recursively builds the left subtree using the elements at the left of the middle element,
+; and the right subtree using the elements at the right, from the successor of the middle element to the nth element.
+
+; The built tree is the first element of the result list, the list of unused elements is the second.
+
+; The tree produced by list->tree for list (1 3 5 7 9 11) is
+;              5
+;            /   \
+;           1     9
+;            \   / \
+;             3 7   11
+
+; ----- b -----
