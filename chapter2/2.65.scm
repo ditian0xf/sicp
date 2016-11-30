@@ -81,5 +81,68 @@
 (tree->list-linear (union-set set1 set2))
 ; (0 2 3 5 6 7)
 
+;----- intersection-set in linear time -----
+(define (intersection-set-as-list set1 set2)
+  (if (or (null? set1) (null? set2))
+      '()
+      (let ((head1 (car set1))
+            (head2 (car set2)))
+        (cond ((< head1 head2) (intersection-set-as-list (cdr set1) set2))
+              ((> head1 head2) (intersection-set-as-list set1 (cdr set2)))
+              (else (cons head1 (intersection-set-as-list (cdr set1) (cdr set2))))))))
 
+(define (intersection-set set1 set2)
+  (let ((list1 (tree->list-linear set1))
+        (list2 (tree->list-linear set2)))
+    (list->tree-linear (intersection-set-as-list list1 list2))))
 
+; tests
+(define set1 (list->tree-linear '()))
+(define set2 (list->tree-linear '()))
+(tree->list-linear (intersection-set set1 set2))
+; ()
+
+(define set1 (list->tree-linear '()))
+(define set2 (list->tree-linear '(1)))
+(tree->list-linear (intersection-set set1 set2))
+; ()
+
+(define set1 (list->tree-linear '(1)))
+(define set2 (list->tree-linear '()))
+(tree->list-linear (intersection-set set1 set2))
+; ()
+
+(define set1 (list->tree-linear '(1)))
+(define set2 (list->tree-linear '(1)))
+(tree->list-linear (intersection-set set1 set2))
+; (1)
+
+(define set1 (list->tree-linear '(1)))
+(define set2 (list->tree-linear '(2)))
+(tree->list-linear (intersection-set set1 set2))
+; ()
+
+(define set1 (list->tree-linear '(1 2)))
+(define set2 (list->tree-linear '(1)))
+(tree->list-linear (intersection-set set1 set2))
+; (1)
+
+(define set1 (list->tree-linear '(1 2)))
+(define set2 (list->tree-linear '(2)))
+(tree->list-linear (intersection-set set1 set2))
+; (2)
+
+(define set1 (list->tree-linear '(1 2)))
+(define set2 (list->tree-linear '(3)))
+(tree->list-linear (intersection-set set1 set2))
+; ()
+
+(define set1 (list->tree-linear '(1 2)))
+(define set2 (list->tree-linear '(2 3 5)))
+(tree->list-linear (intersection-set set1 set2))
+; (2)
+
+(define set1 (list->tree-linear '(1 3 5 6)))
+(define set2 (list->tree-linear '(2 3 6 7)))
+(tree->list-linear (intersection-set set1 set2))
+; (3 6)
